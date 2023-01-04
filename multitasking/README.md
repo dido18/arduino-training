@@ -1,7 +1,6 @@
 # Multi-tasking with arduino
 
-Inspired by [here](https://learn.adafruit.com/multi-tasking-the-arduino-part-1?) and
-[link](https://learn.adafruit.com/multi-tasking-the-arduino-part-2?view=all)
+Inspired by [here](https://learn.adafruit.com/multi-tasking-the-arduino-part-1?)
 
 ## Use the `delay()` function.
 
@@ -89,7 +88,7 @@ On each pass through the loop, it looks at the millis() clock to see if it is ti
 
 Questions:
 
-- how the millis() function can be used to blink a led without blocking the processor ?
+- add another led and blink it at a different rate.
 - how it is possible to have different time when the led is on and the led is off ? every 5 second switch on the led for
   2 seconds
 
