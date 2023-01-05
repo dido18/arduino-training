@@ -1,1 +1,1 @@
-# stopwatch-arduino
+# Arduino Training Lessons
