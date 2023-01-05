@@ -56,7 +56,7 @@ Time: 1999
 We can use the millis function to check if a certain amount of time is passed.
 
 ```c
-unsigned long previousMillis;
+unsigned long previousMillis = 0;
 int period = 1000; // milliseconds period 
 
 void setup() {
