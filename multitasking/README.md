@@ -63,7 +63,7 @@ void setup() {
   Serial.begin(9600);
 }
 void loop() {
-  long currentMillis = millis();
+  unsigned long currentMillis = millis();
 
   if (currentMillis - previousMillis >  period){
     previousMillis = currentMillis;
