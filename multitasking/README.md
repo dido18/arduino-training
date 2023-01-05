@@ -103,3 +103,7 @@ That is the State part of the State Machine.
 We also have code that looks at the state and decides when and how it needs to change.
 That is the Machine part.  
 Every time through the loop we ‘run the machine’ and the machine takes care of updating the state.
+
+Questions:
+
+- copy and paste is not good in programming, because it is error prone. 
