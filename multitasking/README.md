@@ -65,7 +65,7 @@ void setup() {
 void loop() {
   unsigned long currentMillis = millis();
 
-  if (currentMillis - previousMillis >  period){
+  if (currentMillis - previousMillis >=  period){
     previousMillis = currentMillis;
     Serial.print("The elapsed milliseconds are: "); 
     Serial.println(period);
