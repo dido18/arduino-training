@@ -106,4 +106,6 @@ Every time through the loop we ‘run the machine’ and the machine takes care 
 
 Questions:
 
-- copy and paste is not good in programming, because it is error prone. 
+- copy and paste is not good in programming, because it is error prone.
+
+### Flash using function (separate into multiple .ino files)
