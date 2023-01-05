@@ -23,7 +23,7 @@ void loop() {
   // difference between the current time and last time you blinked 
   // the LED is bigger than the interval at which you want to 
   // blink the LED
-  long currentMillis = millis();
+  unsigned long currentMillis = millis();
   if(currentMillis - previousMillis > ledOnTime) {
     // save the last time you blinked the LED 
     previousMillis = currentMillis;   
