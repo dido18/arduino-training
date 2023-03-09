@@ -300,6 +300,142 @@ Esercizio
 #### Multple leds
 
 
-
 Exercise.
- - fare il gioco del [simon](https://it.wikipedia.org/wiki/Simon_(gioco)): 4 pulsanti, 4 led e il cicalino. 
+ - fare il gioco del [simon](https://it.wikipedia.org/wiki/Simon_(gioco)): 4 pulsanti, 4 led e il cicalino.
+
+
+## Part 2
+
+8 march 2023
+
+Material:
+- Oplà kit
+
+Concepts:
+- I2C
+- Interrupt ??
+
+Other resource:
+- https://www.youtube.com/@BenEater 
+
+### I2C 
+https://en.wikipedia.org/wiki/I%C2%B2C
+The I2C was a I2C trademark symbol so can be used but with a different name (`TWI` Two Wire Interface). 
+The i2C library in Arduino is called `wire` for this reason.
+
+Every sensor has a unique address. This address is defined in the fabric. 
+If there are sensors with the same address there is a problem.  
+Some sensor the address can be changed (but not all).
+
+There are two wires:
+- SDA: the data transfer
+- SCL: the clock signal 
+
+Having two wires is important because the processor use the SCl to generate the clock and all the attached device follow that clock.
+
+The standard speed communication is from 100 kbit/s to 5 Mibit/s.
+
+Examples of I2c sensors: 
+ - BNo055: https://www.bosch-sensortec.com/products/smart-sensors/bno055/ https://github.com/arduino-libraries/BNO055
+ - TinkerKit Basic: is a connector to allow connection without error 
+
+List of I2C devices
+- https://i2cdevices.org/devices
+
+The I2C sensor has also a `interupt` pin. The sensor can write into this sensor.
+
+
+There is also a `I3C` specification `https://en.wikipedia.org/wiki/I3C_(bus)`
+
+#### Oplà kit with I2C
+
+[`ESLOV`](https://www.duffyfilm.com/arduino-introducing-eslov-iot-invention-kit/): Era un sistema to make the sensor intelligent. So that the sensor is able to preprocess the data, and the 
+processor is able to read the data already processed. ESLOV è un villaggio della Svezia. Sulle board è rimasto questo attacco ma il sistema ESLOV non c'è più.
+
+
+
+
+- Exercise 1: Show accelerometer from IotCarrier
+
+```c++
+/*
+  Arduino LSM6DS3 - Simple Accelerometer
+
+  This example reads the acceleration values from the LSM6DS3
+  sensor and continuously prints them to the Serial Monitor
+  or Serial Plotter.
+
+  The circuit:
+  - Arduino Uno WiFi Rev 2 or Arduino Nano 33 IoT
+
+  created 10 Jul 2019
+  by Riccardo Rizzo
+
+  This example code is in the public domain.
+*/
+
+#include <Arduino_MKRIoTCarrier.h>
+MKRIoTCarrier carrier;
+
+void setup() {
+  Serial.begin(9600);
+  while (!Serial);
+
+  if (!carrier.IMUmodule.begin()) {
+    Serial.println("Failed to initialize IMU!");
+
+    while (1);
+  }
+
+  Serial.print("Accelerometer sample rate = ");
+  Serial.print(carrier.IMUmodule.accelerationSampleRate());
+  Serial.println(" Hz");
+  Serial.println();
+  Serial.println("Acceleration in G's");
+  Serial.println("X\tY\tZ");
+}
+
+void loop() {
+  float x, y, z;
+
+  if (carrier.IMUmodule.accelerationAvailable()) {
+    carrier.IMUmodule.readAcceleration(x, y, z);
+
+    Serial.print(x);
+    Serial.print('\t');
+    Serial.print(y);
+    Serial.print('\t');
+    Serial.println(z);
+  }
+}
+
+```
+
+
+note 
+- `carrier.IMUmodule.accelerationAvailable()` is a method to check if there is data on buffer 
+
+
+Show the internal of the [Arduino_LS](https://github.com/arduino-libraries/Arduino_LSM6DS3)
+
+- the define are used to set the address
+- class: to encapsulate code and usually it has `begin` and `end` function. 
+
+Extension
+ - Add the temperature https://github.com/arduino-libraries/Arduino_HTS221
+- usa il singleton, ma era un modo per semplificare. Adesso non si usa più ma si istanzia l'oggetto.
+
+### Motors
+
+
+DC motors
+
+  - diodo 
+  - MOSFET 
+  - H-bridge: sono 4 mosfet. Usato per poter indicare anche la velocità e avanti e indietro.
+    - `L293D`: ha 2 modalità
+      - 1: 2 motori in velocità e direzione
+      - 2: 4 motori solo un direzione
+
+
+ADC motors
