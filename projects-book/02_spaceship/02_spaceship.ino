@@ -4,6 +4,8 @@ const int led1Pin = 3; // green Led
 const int led2Pin = 4;
 const int led3Pin = 5;
 
+int switchState;
+
 void setup() {
   Serial.begin(9600);
   pinMode(buttonPin, INPUT);
@@ -14,9 +16,9 @@ void setup() {
 }
 
 void loop() {
-  int val;
-  val = digitalRead(buttonPin);
-  if (val == LOW){
+  
+  switchState = digitalRead(buttonPin);
+  if (switchState == LOW){
     digitalWrite(led1Pin, HIGH);  // green led on
     digitalWrite(led2Pin, LOW);   // red led off
     digitalWrite(led3Pin, LOW);   // red led off
