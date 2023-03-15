@@ -123,9 +123,33 @@ void loop() {
 Questions: 
  - What happens if delay is very small ?? rimane sempre accesso
  - what happens if delays are differente (say 3 and 7) ? la percezione è che il led è sempre accesso ma è meno luminoso.
-	 - si introduce il concetto di `PWM` . La differenza tra tutto il period e il duty (accesso).  La percentuale dil duty cycle ci dice la luminosita. che sfrutta la pesistenza dell'immagine dell'occhio. quindi accendendo e spegnendo un led cont tempi diversi, la percezione è che la luminosità è inferiore.
+	 - si introduce il concetto di `PWM`
+ 
+#### PWM
+resource: https://docs.arduino.cc/learn/microcontrollers/analog-output
 
-  #### First circuit 
+Pulse Width Modulation, or PWM, is a technique for getting analog results with digital means.
+
+This on-off pattern can simulate voltages in between the full Vcc of the board (e.g., 5 V on UNO, 3.3 V on a MKR board) and off (0 Volts) 
+by changing the portion of the time the signal spends on versus the time that the signal spends off. 
+The duration of "on time" is called the pulse width.
+
+- Period: is the inverse of the PWM (given in Hertz)
+- Pulse with: the duration of ON.
+- Duty cycle: ratio of the Pulse Width to the period.
+
+For example, with a PWM=500Hertz the `Period = 1/PWM = = 1/(1/500) = 1/500 = 0.002 seconds = 2 milliseconds`
+the period is equal to 2 milliseconds.
+
+The `analogWrite` function takes a value from `0-255` where 25 represents the 100% duty cycle and `127` the 50 duty cycle.
+
+The pins that supprt the PWM has a `~` symbol.
+
+La percentuale del duty cycle ci dice la luminosita. che sfrutta la pesistenza dell'immagine dell'occhio, 
+quindi accendendo e spegnendo un led cont tempi diversi, la percezione è che la luminosità è inferiore.
+
+
+#### First circuit 
 
 - *breadboard*: il vnataggio   è che posso collegare i componenti tra di loto in modo facile sperimentando.
 	- Il nome vero è solderless breadboard 
@@ -429,7 +453,6 @@ Extension
 
 
 DC motors
-
   - diodo 
   - MOSFET 
   - H-bridge: sono 4 mosfet. Usato per poter indicare anche la velocità e avanti e indietro.
@@ -439,3 +462,125 @@ DC motors
 
 
 ADC motors
+
+
+# Part 3
+15 march 2023
+
+Concept
+ - cloud: connect a board to the cloud
+ - digital twin: the "digital" device and its variable 
+
+Material
+- mkr wifi 1010
+
+#### Cloud introduction
+- create device
+- create thing
+- create variable/property: note: the arduino is different to other competitor because the user must specify the variable type during creation. 
+
+- editor cloud
+  - `thingPropoerties.h` is into another tab to have the `complex` code in a separate tab
+- arduinoCloud library: the connection to the cloud is hidden by the library, this is the
+  - the connectionHandler: is the core that enable to connect to the network (wifi) and to the cloud mqtt
+  - data: the data are sent encoded in CBOR in bytes.
+
+
+
+####  Exercise: servo moto from cloud
+- mkrwifi 1010 
+- servo motor (red 5v, nero gnd, bianca pin5)
+- node Red: arduinoCloud has a plugin for nodeRed (https://nodered.org/). The company has build also the FlowForge (https://flowforge.com/). Alternative is https://www.home-assistant.io/  
+  - can permit to program an iot device visually with drag and drop
+  - it is used also to integrate different systems
+  - can mix properties of different users.
+
+
+``` 
+#include "thingProperties.h"
+#include <Servo.h>
+
+Servo indicator;
+
+void setup() {
+
+ // this is needed because in the mkrWifi 1010 the serial usb is in the processor 
+ // other possibility: to put a delay(2500) instead of while()
+  while(!Serial){ 
+    delay(1); 
+ }    
+  Serial.begin(9600);
+  // This delay gives the chance to wait for a Serial Monitor without blocking if none is found
+  delay(1500); 
+
+  // Defined in thingProperties.h
+  initProperties();
+
+  // Connect to Arduino IoT Cloud
+  ArduinoCloud.begin(ArduinoIoTPreferredConnection);
+  
+  setDebugMessageLevel(2);
+  ArduinoCloud.printDebugInfo();
+  indicator.attach(5);
+}
+
+void loop() {
+  ArduinoCloud.update();
+
+}
+
+// if the variable id READ_WRITE, the function is cal every time a new value is received from the iot cloud
+// Other motivation: we can retrofig the code with or without cloud usign the function update.
+void onAngleChange()  {
+  int a = int(angle);
+  a = constrain(a, 0, 179);
+  indicator.write(angle);
+}
+
+```
+
+Dashboard 
+``` yml 
+name: CloudServoControl
+widgets:
+    - height: 5
+      height_mobile: 5
+      name: Slider
+      options:
+        max: 179
+        min: 0
+      type: Slider
+      variables:
+        - thing_id: CloudServo
+          variable_id: angle
+      width: 6
+      width_mobile: 6
+      x: 0
+      x_mobile: 0
+      "y": 0
+      y_mobile: 0
+```
+
+Thing
+
+`arduino-cloud-cli thing extract  -i *thingId* > CloudServoThing.yaml`
+
+
+```yml 
+name: CloudServo
+variables:
+    - name: angle
+      permission: READ_WRITE
+      type: ANGLE
+      update_parameter: 0
+      update_strategy: ON_CHANGE
+      variable_name: angle
+
+```
+
+#### Exercise: show temp gauge on iot opla
+
+
+My Questions
+- save to sd card ?? 
+- se un utente vuole gestire 

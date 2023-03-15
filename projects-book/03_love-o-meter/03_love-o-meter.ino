@@ -15,9 +15,9 @@ void setup() {
 }
 
 void loop() {
-  int sensorVal = analogRead(sensorPin);         // ADC reads value from 0-1023
+  int sensorVal = analogRead(sensorPin);       // ADC reads value from 0-1023
   float voltage = (sensorVal / 1024.0) * 5.0;  // convert ADC analog read from 0-1023 to a voltage 0-5
-  float temperature = (voltage - .5) * 100;  // convet volt to temperature:  every 10 millivots of change is equivalent to 1 degree celsuis.
+  float temperature = (voltage - .5) * 100;    // convet volt to temperature:  every 10 millivots of change is equivalent to 1 degree celsuis.
 
   Serial.print("sensorVal:");
   Serial.print(sensorVal);
